@@ -20,6 +20,8 @@ import android.widget.ImageButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import huhu.com.qrfore.Net.SignConnection;
 import huhu.com.qrfore.R;
 import huhu.com.qrfore.Util.Config;
@@ -42,6 +44,8 @@ public class HandOpActivity extends Activity {
     //弹出窗口
     private PersonInfoWindow personInfoWindow;
     private String name, job, phone;
+    HashMap musicId = new HashMap();
+    SoundPool soundPool;
 
     private Handler handler = new Handler() {
         @Override
@@ -66,8 +70,9 @@ public class HandOpActivity extends Activity {
         edt_name = (EditText) findViewById(R.id.edt_name);
         btn_sign = (Button) findViewById(R.id.btn_handsign);
         //加载音频
-        final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_SYSTEM, 5);
-        final int sourceid = soundPool.load(this, R.raw.sound, 0);
+        soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
+        musicId.put(1, soundPool.load(this, R.raw.sound, 1));
+        musicId.put(2, soundPool.load(this, R.raw.sound2, 1));
         btn_qr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,7 +102,7 @@ public class HandOpActivity extends Activity {
                                         case "1":
                                             ToastBuilder.Build("此人已经签过到", HandOpActivity.this);
                                             int sourceid2 = soundPool.load(HandOpActivity.this, R.raw.sound2, 0);
-                                            soundPool.play(sourceid2, 1, 1, 0, 0, 1);
+                                            soundPool.play((Integer) musicId.get(2), 1, 1, 0, 0, 1);
                                             break;
                                         case "2":
                                             ToastBuilder.Build("查无此人", HandOpActivity.this);
@@ -111,8 +116,7 @@ public class HandOpActivity extends Activity {
                                             //将签到人数递增
                                             Config.hasSign++;
                                             //播放音频
-                                            int sourceid = soundPool.load(HandOpActivity.this, R.raw.sound, 0);
-                                            soundPool.play(sourceid, 1, 1, 0, 0, 1);
+                                            soundPool.play((Integer) musicId.get(1), 1, 1, 0, 0, 1);
 
 
                                     }
