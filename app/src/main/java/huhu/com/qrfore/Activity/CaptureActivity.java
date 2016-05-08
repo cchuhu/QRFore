@@ -6,8 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
-import android.media.SoundPool;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -37,7 +36,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import huhu.com.qrfore.Net.SignConnection;
@@ -76,9 +74,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         }
     };
     //定义一个HashMap用于存放音频流的ID
-    HashMap musicId = new HashMap();
-    SoundPool soundPool;
-    int sourceid;
+
     //----------------------------------
     private CaptureActivityHandler handler;
     private Result savedResultToShow;
@@ -125,10 +121,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         inactivityTimer = new InactivityTimer(this);
         beepManager = new BeepManager(this);
         ambientLightManager = new AmbientLightManager(this);
-        //加载音频
-        soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
-        musicId.put(1, soundPool.load(this, R.raw.sound, 1));
-        musicId.put(2, soundPool.load(this, R.raw.sound2, 1));
         //闪光灯按钮添加监听
         btn_torch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,7 +284,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                                     break;
                                 case "1":
                                     ToastBuilder.Build("此人已经签过到", CaptureActivity.this);
-                                    soundPool.play((Integer) musicId.get(1), 1, 1, 0, 0, 1);
+                                    //播放重复音乐
+                                    MediaPlayer player=MediaPlayer.create(CaptureActivity.this, R.raw.sound2);
+                                    player.start();
                                     break;
                                 case "2":
                                     ToastBuilder.Build("查无此人", CaptureActivity.this);
@@ -305,7 +299,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                                     showDetail(viewfinderView, finalMsg, phone, job);
                                     //将签到人数递增
                                     Config.hasSign++;
-                                    soundPool.play((Integer) musicId.get(2), 1, 1, 0, 0, 1);
+                                    MediaPlayer player2=MediaPlayer.create(CaptureActivity.this, R.raw.sound);
+                                    player2.start();
 
 
                             }
