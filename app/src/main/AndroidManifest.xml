@@ -1,47 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="huhu.com.qrfore"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="huhu.com.qrfore" >
 
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <uses-feature android:name="android.hardware.camera"/>
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/launcher"
         android:label="签到系统"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Activity.LoginActivity">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+        <activity android:name=".Activity.LoginActivity" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Activity.MeetActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask" >
         </activity>
-
         <activity
             android:name=".Activity.HandOpActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask" >
         </activity>
-
         <activity
             android:name=".Activity.CaptureActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name=".Activity.EndActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask" >
         </activity>
+
         <receiver
             android:name=".Util.MyReceiver"
             android:label="NetworkConnection" >
@@ -49,6 +47,9 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".Activity.RegisterActivity" >
+        </activity>
     </application>
 
 </manifest>

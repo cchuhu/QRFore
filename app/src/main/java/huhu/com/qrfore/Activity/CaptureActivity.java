@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -59,8 +61,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     private boolean isTorchOn = false;
     //相机管理器
     private CameraManager cameraManager;
-    //暂停和停止按钮
-    private Button btn_pause, btn_stop;
+    //清零和停止按钮
+    private Button btn_clear, btn_stop;
     //显示人数的textView
     private TextView tv_num;
     //展示信息的popupwindow
@@ -72,6 +74,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
         }
     };
+    SoundPool soundPool;
+    int sourceid;
     //----------------------------------
     private CaptureActivityHandler handler;
     private Result savedResultToShow;
@@ -118,6 +122,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         inactivityTimer = new InactivityTimer(this);
         beepManager = new BeepManager(this);
         ambientLightManager = new AmbientLightManager(this);
+        //加载音频
+        soundPool = new SoundPool(1, AudioManager.STREAM_SYSTEM, 5);
+        sourceid = soundPool.load(this, R.raw.sound, 0);
         //闪光灯按钮添加监听
         btn_torch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,6 +158,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 finish();
             }
         });
+
     }
 
 
@@ -265,8 +273,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         if (msg.equals("")) {
             Toast.makeText(CaptureActivity.this, R.string.not_scan, Toast.LENGTH_SHORT).show();
         } else {
-            Log.e("msg",msg);
-            final String finalMsg = URLDecoder.decode(msg,"utf-8");
+            Log.e("msg", msg);
+            final String finalMsg = URLDecoder.decode(msg, "utf-8");
             if (Config.isOnline == true) {
 
                 new SignConnection(msg, Config.SING, Config.MID, new SignConnection.SignSuccess() {
@@ -292,6 +300,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                                     showDetail(viewfinderView, finalMsg, phone, job);
                                     //将签到人数递增
                                     Config.hasSign++;
+                                    soundPool.play(sourceid, 1, 1, 0, 0, 1);
 
 
                             }

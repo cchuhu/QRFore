@@ -19,7 +19,7 @@ public class LoginActivity extends Activity {
     //账号密码输入框
     private EditText edt_account, edt_password;
     //登陆按钮
-    private Button btn_login;
+    private Button btn_login,btn_register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,14 @@ public class LoginActivity extends Activity {
         edt_account = (EditText) findViewById(R.id.edt_account);
         edt_password = (EditText) findViewById(R.id.edt_password);
         btn_login = (Button) findViewById(R.id.btn_login);
+        btn_register=(Button)findViewById(R.id.btn_register);
+        //注册按钮添加监听
+        btn_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+            }
+        });
         //联网设置监听
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override

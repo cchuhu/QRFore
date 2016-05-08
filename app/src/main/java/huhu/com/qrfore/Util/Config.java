@@ -12,7 +12,7 @@ public class Config {
     //字符集
     public static final String CHARSET = "utf-8";
     //服务器地址
-    public static final String LOCALHOST = "121.250.222.35";
+    public static final String LOCALHOST = "121.250.219.167";
     //登陆接口
     public static final String URL_LOGIN = "http://" + LOCALHOST + ":8080/servlet/SignLogin";
     //签到接口
@@ -23,9 +23,13 @@ public class Config {
     public static final String URL_CUT = "http://" + LOCALHOST + ":8080/servlet/SignOver";
     //刷新
     public static final String URL_REFRESH = "http://" + LOCALHOST + ":8080/servlet/Refresh";
+    //签到清零
+    public static final String URL_CLEAR = "http://" + LOCALHOST + ":8080/servlet/Clear";
     //判断当前签到点是否有会议
     public static Boolean hasMeeting = false;
-    //当前会议的信息
+    //注册接口
+    public static final String URL_REGISTER = "http://" + LOCALHOST + ":8080/servlet/RegistSign";
+    //当前会议的信息"=
     public static String MID;
     public static String MNAME;
     public static String MSTARTTIME;

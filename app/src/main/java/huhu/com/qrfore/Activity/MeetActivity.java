@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.sql.Timestamp;
 
+import huhu.com.qrfore.Net.ClearConnection;
 import huhu.com.qrfore.Net.RefreshConnection;
 import huhu.com.qrfore.R;
 import huhu.com.qrfore.Util.Config;
@@ -32,7 +33,7 @@ public class MeetActivity extends Activity {
     //刷新按钮
     private ImageButton btn_refresh;
     //开始签到的按钮
-    private Button btn_sign;
+    private Button btn_sign, btn_clear;
     private RelativeLayout relativeLayout;
 
     @Override
@@ -69,6 +70,14 @@ public class MeetActivity extends Activity {
         img_hint = (ImageView) findViewById(R.id.img_hint);
         btn_refresh = (ImageButton) findViewById(R.id.btn_refresh);
         btn_sign = (Button) findViewById(R.id.btn_beginsign);
+        btn_clear = (Button) findViewById(R.id.btn_clear);
+        btn_clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                clearInfo(Config.MID, Config.SING);
+            }
+        });
         relativeLayout = (RelativeLayout) findViewById(R.id.layout_hasdata);
         btn_sign.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +120,27 @@ public class MeetActivity extends Activity {
             }
         });
     }
+
+    /**
+     * 清除签到信息的接口
+     */
+    private void clearInfo(String mid, String point) {
+        new ClearConnection(point, mid, new ClearConnection.ClearSuccess() {
+            @Override
+            public void onSuccess(String result) {
+                if (result.equals("1")) {
+                    ToastBuilder.Build("清零成功", MeetActivity.this);
+                }
+            }
+        }, new ClearConnection.ClearFailed() {
+            @Override
+            public void onFailed() {
+
+            }
+        });
+
+    }
+
 
     /**
      * 将数据设置到组件上

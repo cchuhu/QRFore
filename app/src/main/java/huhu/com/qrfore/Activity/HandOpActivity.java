@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -63,6 +65,9 @@ public class HandOpActivity extends Activity {
         btn_qr = (ImageButton) findViewById(R.id.btn_qr);
         edt_name = (EditText) findViewById(R.id.edt_name);
         btn_sign = (Button) findViewById(R.id.btn_handsign);
+        //加载音频
+        final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_SYSTEM, 5);
+        final int sourceid = soundPool.load(this, R.raw.sound, 0);
         btn_qr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,7 +108,9 @@ public class HandOpActivity extends Activity {
                                             showDetail(view, name, phone, job);
                                             //将签到人数递增
                                             Config.hasSign++;
-                                            //将签到框清空
+                                            //播放音频
+                                            soundPool.play(sourceid, 1, 1, 0, 0, 1);
+
 
                                     }
                                     edt_name.setText("");

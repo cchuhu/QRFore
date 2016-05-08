@@ -170,7 +170,14 @@
                     android:text="2013年9月23日 18：00"
                     android:textSize="20dp"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_clear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="清除签到信息"/>
         </LinearLayout>
+
 
         <Button
             android:id="@+id/btn_beginsign"
