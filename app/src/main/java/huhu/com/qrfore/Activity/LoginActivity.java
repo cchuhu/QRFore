@@ -40,7 +40,9 @@ public class LoginActivity extends Activity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+                Intent i=new Intent(LoginActivity.this,RegisterActivity.class);
+                startActivity(i);
+                finish();
             }
         });
         //联网设置监听

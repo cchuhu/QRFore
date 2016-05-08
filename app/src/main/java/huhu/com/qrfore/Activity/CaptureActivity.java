@@ -288,6 +288,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                                     break;
                                 case "1":
                                     ToastBuilder.Build("此人已经签过到", CaptureActivity.this);
+                                    int sourceids = soundPool.load(CaptureActivity.this, R.raw.sound2, 0);
+                                    soundPool.play(sourceids, 1, 1, 0, 0, 1);
                                     break;
                                 case "2":
                                     ToastBuilder.Build("查无此人", CaptureActivity.this);

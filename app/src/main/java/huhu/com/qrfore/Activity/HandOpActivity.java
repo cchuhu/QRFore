@@ -96,6 +96,8 @@ public class HandOpActivity extends Activity {
                                             break;
                                         case "1":
                                             ToastBuilder.Build("此人已经签过到", HandOpActivity.this);
+                                            int sourceid2 = soundPool.load(HandOpActivity.this, R.raw.sound2, 0);
+                                            soundPool.play(sourceid2, 1, 1, 0, 0, 1);
                                             break;
                                         case "2":
                                             ToastBuilder.Build("查无此人", HandOpActivity.this);
@@ -109,6 +111,7 @@ public class HandOpActivity extends Activity {
                                             //将签到人数递增
                                             Config.hasSign++;
                                             //播放音频
+                                            int sourceid = soundPool.load(HandOpActivity.this, R.raw.sound, 0);
                                             soundPool.play(sourceid, 1, 1, 0, 0, 1);
 
 
