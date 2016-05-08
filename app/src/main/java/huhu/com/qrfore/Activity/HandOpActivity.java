@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.AudioManager;
-import android.media.SoundPool;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,8 +18,6 @@ import android.widget.ImageButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 import huhu.com.qrfore.Net.SignConnection;
 import huhu.com.qrfore.R;
@@ -44,8 +41,7 @@ public class HandOpActivity extends Activity {
     //弹出窗口
     private PersonInfoWindow personInfoWindow;
     private String name, job, phone;
-    HashMap musicId = new HashMap();
-    SoundPool soundPool;
+
 
     private Handler handler = new Handler() {
         @Override
@@ -69,10 +65,6 @@ public class HandOpActivity extends Activity {
         btn_qr = (ImageButton) findViewById(R.id.btn_qr);
         edt_name = (EditText) findViewById(R.id.edt_name);
         btn_sign = (Button) findViewById(R.id.btn_handsign);
-        //加载音频
-        soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
-        musicId.put(1, soundPool.load(this, R.raw.sound, 1));
-        musicId.put(2, soundPool.load(this, R.raw.sound2, 1));
         btn_qr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,8 +93,8 @@ public class HandOpActivity extends Activity {
                                             break;
                                         case "1":
                                             ToastBuilder.Build("此人已经签过到", HandOpActivity.this);
-                                            int sourceid2 = soundPool.load(HandOpActivity.this, R.raw.sound2, 0);
-                                            soundPool.play((Integer) musicId.get(2), 1, 1, 0, 0, 1);
+                                            MediaPlayer player = MediaPlayer.create(HandOpActivity.this, R.raw.sound2);
+                                            player.start();
                                             break;
                                         case "2":
                                             ToastBuilder.Build("查无此人", HandOpActivity.this);
@@ -116,7 +108,8 @@ public class HandOpActivity extends Activity {
                                             //将签到人数递增
                                             Config.hasSign++;
                                             //播放音频
-                                            soundPool.play((Integer) musicId.get(1), 1, 1, 0, 0, 1);
+                                            MediaPlayer player2 = MediaPlayer.create(HandOpActivity.this, R.raw.sound);
+                                            player2.start();
 
 
                                     }
