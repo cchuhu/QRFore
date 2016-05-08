@@ -3,6 +3,7 @@ package huhu.com.qrfore.Activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +21,7 @@ import org.json.JSONObject;
 import huhu.com.qrfore.Net.SignConnection;
 import huhu.com.qrfore.R;
 import huhu.com.qrfore.Util.Config;
+import huhu.com.qrfore.Util.MyDBHelper;
 import huhu.com.qrfore.Util.ToastBuilder;
 import huhu.com.qrfore.Widget.PersonInfoWindow;
 
@@ -69,7 +71,6 @@ public class HandOpActivity extends Activity {
             }
         });
 
-
         btn_sign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -77,50 +78,62 @@ public class HandOpActivity extends Activity {
                 if (name.equals("")) {
                     ToastBuilder.Build("请输入姓名", HandOpActivity.this);
                 } else {
+                    //如果手机可以联网，则在线签到，否则先存入数据库
+                    if (Config.isOnline == true) {
+                        new SignConnection(name, Config.SING, Config.MID, new SignConnection.SignSuccess() {
+                            @Override
+                            public void onSuccess(String result) {
+                                try {
+                                    System.out.print(name + Config.SING + Config.MID);
+                                    switch (result) {
+                                        case "-1":
+                                            ToastBuilder.Build("服务器错误", HandOpActivity.this);
+                                            break;
+                                        case "1":
+                                            ToastBuilder.Build("此人已经签过到", HandOpActivity.this);
+                                            break;
+                                        case "2":
+                                            ToastBuilder.Build("查无此人", HandOpActivity.this);
+                                            break;
+                                        default:
+                                            JSONObject obj = new JSONObject(result);
+                                            phone = obj.get("ptel").toString();
+                                            job = obj.get("pjob").toString();
+                                            //展示人员信息
+                                            showDetail(view, name, phone, job);
+                                            //将签到人数递增
+                                            Config.hasSign++;
+                                            //将签到框清空
 
-                    new SignConnection(name, Config.SING, Config.MID, new SignConnection.SignSuccess() {
-                        @Override
-                        public void onSuccess(String result) {
-                            try {
-                                System.out.print(name + Config.SING + Config.MID);
-                                switch (result) {
-                                    case "-1":
-                                        ToastBuilder.Build("服务器错误", HandOpActivity.this);
-                                        break;
-                                    case "1":
-                                        ToastBuilder.Build("此人已经签过到", HandOpActivity.this);
-                                        break;
-                                    case "2":
-                                        ToastBuilder.Build("查无此人", HandOpActivity.this);
-                                        break;
-                                    default:
-                                        JSONObject obj = new JSONObject(result);
-                                        phone = obj.get("ptel").toString();
-                                        job = obj.get("pjob").toString();
-                                        //展示人员信息
-                                        showDetail(view, name, phone, job);
-                                        //将签到人数递增
-                                        Config.hasSign++;
-                                        //将签到框清空
-
+                                    }
+                                    edt_name.setText("");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                                edt_name.setText("");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+
+
                             }
+                        }, new SignConnection.SignFailed() {
+                            @Override
+                            public void onFailed() {
+                                ToastBuilder.Build("签到失败，请重试", HandOpActivity.this);
 
+                            }
+                        });
+                    }
+                    //存入数据库
+                    else {
+                        MyDBHelper myDBHelper = new MyDBHelper(HandOpActivity.this);
+                        SQLiteDatabase db = myDBHelper.getWritableDatabase();
+                        //插入数据库
+                        db.execSQL("insert into qrcode(name,sign,mid) values(?,?,?)", new String[]{name, Config.SING, Config.MID});
+                        showDetail(view, name, "", "");
+                    }
 
-                        }
-                    }, new SignConnection.SignFailed() {
-                        @Override
-                        public void onFailed() {
-                            ToastBuilder.Build("签到失败，请重试", HandOpActivity.this);
-
-                        }
-                    });
                 }
 
             }
+
         });
     }
 

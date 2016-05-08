@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import java.util.Map;
 import huhu.com.qrfore.Net.SignConnection;
 import huhu.com.qrfore.R;
 import huhu.com.qrfore.Util.Config;
+import huhu.com.qrfore.Util.MyDBHelper;
 import huhu.com.qrfore.Util.ToastBuilder;
 import huhu.com.qrfore.Widget.PersonInfoWindow;
 import zxing.AmbientLightManager;
@@ -106,11 +108,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
      * 初始化资源
      */
     private void initViews() {
-        btn_pause = (Button) findViewById(R.id.btn_pause);
         btn_stop = (Button) findViewById(R.id.btn_stop);
         btn_handop = (ImageButton) findViewById(R.id.btn_operation);
         btn_torch = (ImageButton) findViewById(R.id.btn_torch);
-        tv_num = (TextView) findViewById(R.id.tv_number);
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
         beepManager = new BeepManager(this);
@@ -263,49 +263,59 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             Toast.makeText(CaptureActivity.this, R.string.not_scan, Toast.LENGTH_SHORT).show();
         } else {
             final String finalMsg = msg;
-            new SignConnection(msg, Config.SING, Config.MID, new SignConnection.SignSuccess() {
-                @Override
-                public void onSuccess(String result) {
-                    try {
+            if (Config.isOnline == true) {
 
-                        switch (result) {
-                            case "-1":
-                                ToastBuilder.Build("服务器错误", CaptureActivity.this);
-                                break;
-                            case "1":
-                                ToastBuilder.Build("此人已经签过到", CaptureActivity.this);
-                                break;
-                            case "2":
-                                ToastBuilder.Build("查无此人", CaptureActivity.this);
-                                break;
-                            default:
-                                JSONObject obj = new JSONObject(result);
-                                String phone = obj.get("ptel").toString();
-                                String job = obj.get("pjob").toString();
-                                //展示人员信息
-                                showDetail(viewfinderView, finalMsg, phone, job);
-                                //将签到人数递增
-                                Config.hasSign++;
-                                tv_num.setText(Config.hasSign);
 
+                new SignConnection(msg, Config.SING, Config.MID, new SignConnection.SignSuccess() {
+                    @Override
+                    public void onSuccess(String result) {
+                        try {
+
+                            switch (result) {
+                                case "-1":
+                                    ToastBuilder.Build("服务器错误", CaptureActivity.this);
+                                    break;
+                                case "1":
+                                    ToastBuilder.Build("此人已经签过到", CaptureActivity.this);
+                                    break;
+                                case "2":
+                                    ToastBuilder.Build("查无此人", CaptureActivity.this);
+                                    break;
+                                default:
+                                    JSONObject obj = new JSONObject(result);
+                                    String phone = obj.get("ptel").toString();
+                                    String job = obj.get("pjob").toString();
+                                    //展示人员信息
+                                    showDetail(viewfinderView, finalMsg, phone, job);
+                                    //将签到人数递增
+                                    Config.hasSign++;
+                                    tv_num.setText(Config.hasSign);
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+
                     }
+                }, new SignConnection.SignFailed() {
+                    @Override
+                    public void onFailed() {
+                        ToastBuilder.Build("签到失败，请重试", CaptureActivity.this);
 
-
-                }
-            }, new SignConnection.SignFailed() {
-                @Override
-                public void onFailed() {
-                    ToastBuilder.Build("签到失败，请重试", CaptureActivity.this);
-
-                }
-            });
-
+                    }
+                });
+            } else {
+                MyDBHelper myDBHelper = new MyDBHelper(CaptureActivity.this);
+                SQLiteDatabase db = myDBHelper.getWritableDatabase();
+                //插入数据库
+                db.execSQL("insert into qrcode(name,sign,mid) values(?,?,?)", new String[]{msg, Config.SING, Config.MID});
+                showDetail(viewfinderView, msg, "", "");
+            }
 
         }
+        restartPreviewAfterDelay(2000);
 
     }
 

@@ -5,10 +5,14 @@ package huhu.com.qrfore.Util;
  * 常量类
  */
 public class Config {
+    //判断是否联网的标志
+    public static Boolean isOnline = true;
+    //判断离线保存人员的个数
+    public static int DisOnlineCoun = 0;
     //字符集
     public static final String CHARSET = "utf-8";
     //服务器地址
-    public static final String LOCALHOST = "121.250.222.66";
+    public static final String LOCALHOST = "121.250.222.35";
     //登陆接口
     public static final String URL_LOGIN = "http://" + LOCALHOST + ":8080/servlet/SignLogin";
     //签到接口
@@ -18,7 +22,7 @@ public class Config {
     //结束签到
     public static final String URL_CUT = "http://" + LOCALHOST + ":8080/servlet/SignOver";
     //刷新
-    public static final String URL_REFRESH = "http://"+LOCALHOST+":8080/servlet/Refresh";
+    public static final String URL_REFRESH = "http://" + LOCALHOST + ":8080/servlet/Refresh";
     //判断当前签到点是否有会议
     public static Boolean hasMeeting = false;
     //当前会议的信息

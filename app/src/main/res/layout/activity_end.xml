@@ -81,7 +81,7 @@
                 android:id="@+id/tv_signnum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="16"
+                android:text="0"
                 android:textSize="20dp"/>
         </LinearLayout>
 

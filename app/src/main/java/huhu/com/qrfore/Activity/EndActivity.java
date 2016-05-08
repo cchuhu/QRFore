@@ -1,7 +1,9 @@
 package huhu.com.qrfore.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -36,10 +38,20 @@ public class EndActivity extends AppCompatActivity {
 
     private void initViews() {
         btn_back = (ImageButton) findViewById(R.id.btn_back);
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(EndActivity.this, MeetActivity.class);
+                startActivity(i);
+                EndActivity.this.finish();
+            }
+        });
         tv_signnum = (TextView) findViewById(R.id.tv_signnum);
         tv_starttime = (TextView) findViewById(R.id.tv_signstarttime);
         tv_endtime = (TextView) findViewById(R.id.tv_signendtime);
         lv_name = (ListView) findViewById(R.id.lv_pername);
+        tv_signnum.setText(Config.hasSign);
         setData();
     }
 
