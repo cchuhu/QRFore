@@ -34,6 +34,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -100,7 +101,11 @@ public final class CaptureActivityHandler extends Handler {
           }
           scaleFactor = bundle.getFloat(DecodeThread.BARCODE_SCALED_FACTOR);          
         }
-        activity.handleDecode((Result) message.obj, barcode, scaleFactor);
+        try {
+          activity.handleDecode((Result) message.obj, barcode, scaleFactor);
+        } catch (UnsupportedEncodingException e) {
+          e.printStackTrace();
+        }
         break;
       case R.id.decode_failed:
         // We're decoding as fast as possible, so when one decode fails, start another.

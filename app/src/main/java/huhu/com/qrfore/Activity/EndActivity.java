@@ -51,7 +51,7 @@ public class EndActivity extends AppCompatActivity {
         tv_starttime = (TextView) findViewById(R.id.tv_signstarttime);
         tv_endtime = (TextView) findViewById(R.id.tv_signendtime);
         lv_name = (ListView) findViewById(R.id.lv_pername);
-        tv_signnum.setText(Config.hasSign);
+
         setData();
     }
 

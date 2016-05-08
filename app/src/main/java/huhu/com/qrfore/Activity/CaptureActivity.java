@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
@@ -30,6 +31,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Map;
@@ -251,7 +254,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     /**
      * 处理识别结果
      */
-    public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
+    public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) throws UnsupportedEncodingException {
         inactivityTimer.onActivity();
         beepManager.playBeepSoundAndVibrate();
 
@@ -262,9 +265,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         if (msg.equals("")) {
             Toast.makeText(CaptureActivity.this, R.string.not_scan, Toast.LENGTH_SHORT).show();
         } else {
-            final String finalMsg = msg;
+            Log.e("msg",msg);
+            final String finalMsg = URLDecoder.decode(msg,"utf-8");
             if (Config.isOnline == true) {
-
 
                 new SignConnection(msg, Config.SING, Config.MID, new SignConnection.SignSuccess() {
                     @Override
@@ -289,7 +292,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                                     showDetail(viewfinderView, finalMsg, phone, job);
                                     //将签到人数递增
                                     Config.hasSign++;
-                                    tv_num.setText(Config.hasSign);
+
 
                             }
 
@@ -311,11 +314,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 SQLiteDatabase db = myDBHelper.getWritableDatabase();
                 //插入数据库
                 db.execSQL("insert into qrcode(name,sign,mid) values(?,?,?)", new String[]{msg, Config.SING, Config.MID});
-                showDetail(viewfinderView, msg, "", "");
+                showDetail(viewfinderView, finalMsg, "", "");
             }
 
         }
-        restartPreviewAfterDelay(2000);
+        restartPreviewAfterDelay(1000);
 
     }
 
