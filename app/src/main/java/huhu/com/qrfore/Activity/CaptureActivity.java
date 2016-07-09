@@ -52,7 +52,7 @@ import zxing.FinishListener;
 import zxing.InactivityTimer;
 import zxing.ViewfinderView;
 
-
+//TODO:添加音频信息
 public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
     //闪光灯开关、手动签到开关
     private ImageButton btn_torch, btn_handop;
@@ -73,7 +73,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
         }
     };
-    //定义一个HashMap用于存放音频流的ID
 
     //----------------------------------
     private CaptureActivityHandler handler;
